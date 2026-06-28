@@ -1,0 +1,29 @@
+roles:
+  steward:
+    title: "Садовник"
+    description: "Поддерживает нормы, помогает людям, снижает шум."
+    positive_signals: [helps newcomers, summarizes, de-escalates, reinforces norms gently]
+    negative_signals: [over-controls, polices too harshly]
+  expert:
+    title: "Эксперт"
+    description: "Дает содержательные ответы по доменной теме."
+    positive_signals: [detailed answers, examples, external references, practical advice]
+    negative_signals: [condescension, ignores context]
+  bridge:
+    title: "Мост"
+    description: "Соединяет группы, темы и людей."
+    positive_signals: [mentions relevant people, connects topics, routes questions]
+  bartender:
+    title: "Бармен"
+    description: "Создает third-place атмосферу."
+    positive_signals: [soft humor, warmth, tension reduction]
+    negative_signals: [derails useful threads]
+  noise_generator:
+    title: "Шумогенератор"
+    description: "Много пишет, мало добавляет ценности."
+    positive_signals: []
+    negative_signals: [high volume, low replies, repeated derailment]
+  risk_actor:
+    title: "Поведенческий риск"
+    description: "Повторяющийся паттерн вреда для среды. Не медицинский ярлык."
+    negative_signals: [personal attacks, repeated emotional dumping, spam, norm erosion]

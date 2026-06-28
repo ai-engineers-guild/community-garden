@@ -1,0 +1,222 @@
+metrics:
+  # Axis 1: Purpose Fit
+  purpose_fit_message_ratio:
+    axis: "Purpose Fit"
+    title: "Purpose-fit Message Ratio"
+    type: semantic
+    scale: 0-100
+    description: "Доля сообщений, соответствующих теме сообщества"
+    how_to_calculate: "LLM классифицирует каждое сообщение: on-purpose / adjacent / off-purpose"
+    action_if_bad: "Вернуть рамку, топики, правила"
+
+  purpose_fit_thread_ratio:
+    axis: "Purpose Fit"
+    title: "Purpose-fit Thread Ratio"
+    type: semantic
+    scale: 0-100
+    description: "Доля тредов, которые развивают цель сообщества"
+    how_to_calculate: "LLM оценивает весь тред"
+    action_if_bad: "Запускать целевые обсуждения"
+
+  useful_outcome_count:
+    axis: "Purpose Fit"
+    title: "Useful Outcome Count"
+    type: semantic
+    scale: count
+    description: "Сколько родилось полезных результатов (решения, summary, ссылки, проекты, митапы)"
+    how_to_calculate: "count: решения, summary, ссылки, проекты, митапы, договоренности"
+    action_if_bad: "Делать “вынос в артефакты”"
+
+  topic_drift_score:
+    axis: "Purpose Fit"
+    title: "Topic Drift Score"
+    type: semantic
+    scale: 0-100
+    description: "Насколько чат уехал от изначального назначения"
+    how_to_calculate: "доля off-purpose тем + длительность drift-тредов"
+    action_if_bad: "Вводить topic hygiene"
+
+  # Axis 2: Signal vs Noise
+  top_3_message_share:
+    axis: "Signal vs Noise"
+    title: "Top-3 Message Share"
+    type: discrete
+    scale: 0-100
+    description: "Доля сообщений от 3 самых активных"
+    how_to_calculate: "messages_top3 / all_messages"
+    action_if_bad: "Ограничивать захват потока"
+
+  top_3_noise_share:
+    axis: "Signal vs Noise"
+    title: "Top-3 Noise Share"
+    type: semantic
+    scale: 0-100
+    description: "Доля шума от 3 главных шумогенераторов"
+    how_to_calculate: "LLM labels noise/flood + top authors"
+    action_if_bad: "Личное предупреждение"
+
+  derailment_impact_score:
+    axis: "Signal vs Noise"
+    title: "Derailment Impact Score"
+    type: semantic
+    scale: 0-100
+    description: "Насколько люди срывают треды"
+    how_to_calculate: "после входа участника тред уходит off-topic/conflict/noise"
+    action_if_bad: "warning / topic split"
+
+  emotional_dumping_rate:
+    axis: "Signal vs Noise"
+    title: "Emotional Dumping / Chaotic Monologue Rate"
+    type: semantic
+    scale: 0-100
+    description: "Доля длинных эмоциональных монологов без запроса/ценности"
+    how_to_calculate: "LLM: rant, venting, repeated emotional spiral"
+    action_if_bad: "Правило и мягкая модерация"
+
+  # Axis 3: Safety
+  personal_attack_rate:
+    axis: "Safety"
+    title: "Personal Attack Rate"
+    type: semantic
+    scale: 0-100
+    description: "Доля сообщений с нападением на человека, а не идею"
+    how_to_calculate: "LLM labels: insult, ridicule, contempt"
+    action_if_bad: "Жесткое правило"
+
+  newcomer_safety_score:
+    axis: "Safety"
+    title: "Newcomer Safety Score"
+    type: semantic
+    scale: 0-100
+    description: "Насколько безопасно новичкам"
+    how_to_calculate: "ответы новичкам + тон ответов + отсутствие насмешек"
+    action_if_bad: "Welcome norm"
+
+  unresolved_conflict_rate:
+    axis: "Safety"
+    title: "Unresolved Conflict Rate"
+    type: semantic
+    scale: 0-100
+    description: "Конфликты, которые не были разрулены"
+    how_to_calculate: "conflict threads without resolution/admin intervention"
+    action_if_bad: "Admin intervention"
+
+  silencing_risk_score:
+    axis: "Safety"
+    title: "Silencing Risk Score"
+    type: semantic
+    scale: 0-100
+    description: "Есть ли паттерн, что после жестких ответов люди замолкают"
+    how_to_calculate: "after-negative-reply silence by target/newcomer"
+    action_if_bad: "Предупреждать агрессоров"
+
+  # Axis 4: Help & Discussion
+  question_resolution_rate:
+    axis: "Help & Discussion"
+    title: "Question Resolution Rate"
+    type: semantic
+    scale: 0-100
+    description: "Доля вопросов, дошедших до ответа/решения"
+    how_to_calculate: "answered/resolved questions / all questions"
+    action_if_bad: "Unanswered queue"
+
+  substantive_discussion_ratio:
+    axis: "Help & Discussion"
+    title: "Substantive Discussion Ratio"
+    type: semantic
+    scale: 0-100
+    description: "Доля тредов, где есть содержательный обмен, а не реплики"
+    how_to_calculate: "LLM оценивает thread depth + смысл"
+    action_if_bad: "Запускать кейс-дискуссии"
+
+  peer_support_ratio:
+    axis: "Help & Discussion"
+    title: "Peer Support Ratio"
+    type: semantic
+    scale: 0-100
+    description: "Участники помогают друг другу без админа"
+    how_to_calculate: "helpful peer replies / all helpful replies"
+    action_if_bad: "Растить stewards"
+
+  expert_contribution_recognition:
+    axis: "Help & Discussion"
+    title: "Expert Contribution Recognition"
+    type: semantic
+    scale: 0-100
+    description: "Ценные ответы замечают или игнорируют"
+    how_to_calculate: "high-value expert messages with replies/reactions/admin amplification"
+    action_if_bad: "Подсвечивать экспертов"
+
+  # Axis 5: Core Growth
+  active_core_retention:
+    axis: "Core Growth"
+    title: "Active Core Retention"
+    type: discrete
+    scale: 0-100
+    description: "Сохраняется ли активное ядро"
+    how_to_calculate: "core members active this week / core previous week"
+    action_if_bad: "Выяснять причины"
+
+  meaningful_newcomer_conversion:
+    axis: "Core Growth"
+    title: "Meaningful Newcomer Conversion"
+    type: semantic
+    scale: 0-100
+    description: "Новички становятся полезными участниками"
+    how_to_calculate: "newcomers with meaningful messages / newcomers"
+    action_if_bad: "Onboarding"
+
+  rising_member_count:
+    axis: "Core Growth"
+    title: "Rising Member Count"
+    type: semantic
+    scale: count
+    description: "Появляются ли новые сильные участники"
+    how_to_calculate: "count людей с растущим useful contribution"
+    action_if_bad: "Поддерживать"
+
+  community_growth_quality:
+    axis: "Core Growth"
+    title: "Community Growth Quality"
+    type: semantic
+    scale: 0-100
+    description: "Растет ли не только размер, но и полезная активность"
+    how_to_calculate: "new members + active speakers + meaningful speakers"
+    action_if_bad: "Менять acquisition/правила"
+
+  # Axis 6: Identity & Governance
+  social_tie_growth:
+    axis: "Identity & Governance"
+    title: "Social Tie Growth"
+    type: semantic
+    scale: 0-100
+    description: "Растут ли связи между участниками"
+    how_to_calculate: "новые reply/support edges между людьми"
+    action_if_bad: "Знакомства, ритуалы, мосты"
+
+  shared_identity_score:
+    axis: "Identity & Governance"
+    title: "Shared Identity Score"
+    type: semantic
+    scale: 0-100
+    description: "Появляются ли “мы”, мемы, символы, традиции"
+    how_to_calculate: "LLM ищет общие фразы, ритуалы, self-reference"
+    action_if_bad: "Создавать ритуалы"
+
+  admin_missed_moment_rate:
+    axis: "Identity & Governance"
+    title: "Admin Missed Moment Rate"
+    type: semantic
+    scale: 0-100
+    description: "Админы пропускают важное"
+    how_to_calculate: "unanswered important Qs, missed conflicts, ignored experts"
+    action_if_bad: "Action queue"
+
+  admin_intervention_quality:
+    axis: "Identity & Governance"
+    title: "Admin Intervention Quality"
+    type: semantic
+    scale: 0-100
+    description: "Вмешательства админов помогают или вредят"
+    how_to_calculate: "before/after thread quality around admin actions"
+    action_if_bad: "Менять стиль модерации"

@@ -1,0 +1,9 @@
+risks:
+  newcomer_churn_risk: "Newcomers ask or signal interest, but receive no meaningful response."
+  expert_churn_risk: "Valuable expert contributions are ignored or punished."
+  overload_risk: "Message volume makes the chat unreadable."
+  tribal_capture_risk: "A subgroup captures agenda and suppresses others."
+  emotional_dumping_risk: "A participant repeatedly uses the community as emotional discharge without reciprocal contribution."
+  low_value_high_volume_risk: "Many messages, little value, frequent derailment."
+  norm_erosion_risk: "Rules or implicit norms stop working."
+  admin_dependency_risk: "Useful activity depends on one admin/founder."

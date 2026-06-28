@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.garden/raw/
+.garden/bronze/
+.garden/silver/
+.garden/gold/
+*.session
+.env
