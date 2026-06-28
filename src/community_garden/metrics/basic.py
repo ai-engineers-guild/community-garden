@@ -145,16 +145,11 @@ def garden_health_from_metrics(metrics: dict) -> dict:
     return {
         "garden_health_score": score,
         "radar": {
-            "vitality": {"score": vitality, "source": "deterministic"},
-            "usefulness": {"score": usefulness, "source": "mixed_proxy"},
-            "diversity": {"score": diversity, "source": "deterministic"},
-            "safety": {"score": None, "source": "semantic_skill_required"},
-            "belonging": {"score": None, "source": "semantic_skill_required"},
-            "readability": {"score": readability_score, "source": "deterministic"},
-            "self_sustainability": {"score": self_sustainability, "source": "deterministic"},
-            "cultural_coherence": {"score": None, "source": "semantic_skill_required"},
-            "leadership_depth": {"score": None, "source": "semantic_skill_required"},
-            "outcome_production": {"score": None, "source": "semantic_skill_required"},
-            "rule_alignment": {"score": None, "source": "semantic_skill_required"},
+            "Purpose Fit": {"score": None, "source": "semantic_skill_required"},
+            "Signal vs Noise": {"score": None, "source": "semantic_skill_required"},
+            "Safety": {"score": None, "source": "semantic_skill_required"},
+            "Help & Discussion": {"score": None, "source": "semantic_skill_required"},
+            "Core Growth": {"score": None, "source": "semantic_skill_required"},
+            "Identity & Governance": {"score": None, "source": "semantic_skill_required"},
         },
     }
