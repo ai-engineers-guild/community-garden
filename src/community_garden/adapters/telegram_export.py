@@ -76,6 +76,12 @@ class TelegramExportAdapter(SourceAdapter):
         event_type = EventType.MESSAGE_CREATED
         if msg_type == "service" or msg.get("action"):
             event_type = EventType.ADMIN_ACTION
+            if not text and msg.get("action"):
+                action_str = f"[SERVICE ACTION: {msg.get('action')}]"
+                if "members" in msg:
+                    action_str += f" on {msg.get('members')}"
+                text = action_str
+                clean_text = action_str
         if msg.get("edited"):
             # Telegram export keeps edited message as a message with edited field; store as created with metadata.
             event_type = EventType.MESSAGE_CREATED

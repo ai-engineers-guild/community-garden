@@ -1,29 +1,21 @@
 roles:
-  steward:
-    title: "Садовник"
-    description: "Поддерживает нормы, помогает людям, снижает шум."
-    positive_signals: [helps newcomers, summarizes, de-escalates, reinforces norms gently]
-    negative_signals: [over-controls, polices too harshly]
-  expert:
-    title: "Эксперт"
-    description: "Дает содержательные ответы по доменной теме."
-    positive_signals: [detailed answers, examples, external references, practical advice]
-    negative_signals: [condescension, ignores context]
-  bridge:
-    title: "Мост"
-    description: "Соединяет группы, темы и людей."
-    positive_signals: [mentions relevant people, connects topics, routes questions]
-  bartender:
-    title: "Бармен"
-    description: "Создает third-place атмосферу."
-    positive_signals: [soft humor, warmth, tension reduction]
-    negative_signals: [derails useful threads]
-  noise_generator:
-    title: "Шумогенератор"
-    description: "Много пишет, мало добавляет ценности."
+  gardener:
+    title: "Садовник (Gardener)"
+    description: "Жесткий модератор и защитник среды. Безжалостно выкорчевывает сорняки, удаляет шум и банит нарушителей, чтобы защитить цветы."
+    positive_signals: [bans trolls, deletes low-effort content, enforces rules strictly, protects experts]
+    negative_signals: [hesitates to ban obvious weeds, yields to pacifists]
+  flower:
+    title: "Цветок (Flower / Core Contributor)"
+    description: "Создает глубокий, интеллектуальный и ценный контент. Хрупок, не любит конфликты и покинет сад, если его захватят сорняки."
+    positive_signals: [high-signal posts, detailed insights, constructive discussion, peer support]
+    negative_signals: [complains about noise, goes silent when noise increases]
+  weed:
+    title: "Сорняк (Weed)"
+    description: "Генерирует шум, конфликты, низкоуровневые споры или бессодержательный контент. Вытесняет цветы."
     positive_signals: []
-    negative_signals: [high volume, low replies, repeated derailment]
-  risk_actor:
-    title: "Поведенческий риск"
-    description: "Повторяющийся паттерн вреда для среды. Не медицинский ярлык."
-    negative_signals: [personal attacks, repeated emotional dumping, spam, norm erosion]
+    negative_signals: [high volume of noise, emotional dumping, baiting, low-effort questions, non-constructive arguments]
+  pacifist:
+    title: "Пацифист (Pacifist)"
+    description: "Выступает против жесткой модерации под предлогом свободы слова и толерантности. Защищает сорняки от садовников, чем в итоге убивает сад."
+    positive_signals: []
+    negative_signals: [complains about bans, asks to 'just ignore' trolls, defends toxic behavior, criticizes strict moderation]
