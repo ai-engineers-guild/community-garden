@@ -5,5 +5,10 @@ __pycache__/
 .garden/bronze/
 .garden/silver/
 .garden/gold/
+.garden/interventions/
+.garden/memory/
+.serena/
+.pytest_cache/
 *.session
 .env
+sample_data/
