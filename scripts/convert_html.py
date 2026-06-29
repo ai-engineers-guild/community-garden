@@ -1,14 +1,14 @@
 import sys
 from pathlib import Path
 
-md_path = Path(r'C:\Users\User\.gemini\antigravity-cli\brain\c687ceeb-b42e-4d12-a37d-bf8f3e53abcd\community_analysis_report.md')
-html_path = md_path.with_suffix('.html')
-
 from markdown_it import MarkdownIt
 
-md = MarkdownIt().enable('table')
+md_path = Path(sys.argv[1])
+html_path = md_path.with_suffix(".html")
 
-html_content = md.render(md_path.read_text(encoding='utf-8'))
+md = MarkdownIt().enable("table")
+
+html_content = md.render(md_path.read_text(encoding="utf-8"))
 
 full_html = f"""<!DOCTYPE html>
 <html>
@@ -29,5 +29,5 @@ full_html = f"""<!DOCTYPE html>
 </body>
 </html>"""
 
-html_path.write_text(full_html, encoding='utf-8')
+html_path.write_text(full_html, encoding="utf-8")
 print("HTML generated successfully with tables")
