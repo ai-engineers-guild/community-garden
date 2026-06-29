@@ -1,31 +1,34 @@
-# AGENTS (Community Garden)
+# ИИ-Агенты (Community Garden)
 
-**Community Garden** — это не просто бот для сбора метрик. Это *социологический ИИ-движок*, который анализирует поведение участников, выявляет токсичность, находит скрытых лидеров и оценивает здоровье сообщества, опираясь на фундаментальные социологические концепции (например, теорию Элиезера Юдковского "Ухоженный сад").
+**Community Garden** — это социологический ИИ-движок для глубокой аналитики сообществ. Он не просто считает статистику сообщений, а анализирует поведение участников, выявляет токсичность, находит скрытых лидеров и оценивает здоровье сообщества, опираясь на концепт Элиезера Юдковского "Ухоженные сады умирают от пацифизма".
 
-## 🛠 Режимы работы
+## 🛠 Режимы работы ИИ-агентов
 Проект может работать в двух ипостасях:
-1. **Offline AI Skill (текущий)**: ИИ-агент (оркестратор) запускается локально в консоли/IDE. Он использует репозиторий как file-first базу данных (`.garden/`), читает выгруженные логи (JSON) и генерирует отчеты.
+1. **Offline AI Skill (текущий)**: ИИ-агент (ты) запускается локально через консоль или IDE. Ты используешь репозиторий как file-first базу данных (`.garden/`), читаешь выгруженные логи (JSON) и генерируешь отчеты.
 2. **Runtime Bot Wrapper (Roadmap)**: Полноценный SaaS Telegram-бот, который сидит в чатах, общается с админами в личке (Chat with Data), рисует графики по запросу, следит за выполнением установленных правил (Community Guidelines) и генерирует публичные анонимные отчеты.
 
-## Rules
+## 📜 Главные правила (Rules)
 
-- **Source of truth:** All source data must be normalized into `.garden/bronze/events/*.jsonl`.
-- **Deterministic metrics:** Belong in `.garden/silver/metrics/` and `.garden/silver/graphs/`.
-- **LLM-facing context:** Belong in `.garden/gold/llm_packs/`.
-- **Findings & Insights:** Belong in `.garden/silver/findings/` and `.garden/silver/risks/`.
-- **Human-facing reports:** Belong in `.garden/gold/reports/`.
-- **Tone & Ethics:** Act as a cynical, objective sociologist. Name specific users (names/nicknames, no abstract IDs) for both praise and risks. Do not invent facts. Use behavioral terms, not medical diagnoses.
-- **Evidence:** Every finding must include evidence (quotes or message IDs).
+- **Source of truth:** Все исходные данные логов лежат в `.garden/bronze/events/*.jsonl`.
+- **Детерминированные метрики:** Находятся в `.garden/silver/metrics/` и `.garden/silver/graphs/`.
+- **Контекст для LLM:** Всегда читай сжатые логи в `.garden/gold/llm_packs/` (например, `weekly_2026-W26.md`).
+- **Сырые находки и инсайты:** Записывай в `.garden/silver/findings/` и `.garden/silver/risks/`.
+- **Финальные человекочитаемые отчеты:** Генерируй и сохраняй в `.garden/gold/reports/`.
+- **Тон и Этика:** Действуй как циничный, объективный социолог. Называй конкретных пользователей (по именам/никам, без абстрактных ID) и за успехи, и за риски. Не придумывай факты. Используй поведенческие термины (а не медицинские диагнозы).
+- **Доказательства:** Каждая находка (конфликт, лидерство) должна подкрепляться доказательствами (цитатами из `llm_packs`).
 
-## Typical workflow
+## 🔄 Типичный Workflow
 
-1. **Import data:**
+1. **Импорт данных:**
 ```bash
 cg import telegram-export result.json --project .
 ```
-2. **Calculate deterministic stats and prepare LLM packs:**
+2. **Расчет метрик и подготовка LLM packs:**
 ```bash
 cg analyze --project . --period last-week
 ```
-3. **Run AI Agent Orchestrator:**
-Ask the AI Agent (e.g., Serena/Gemini) to execute the `community-garden` orchestration skill. The agent will read the LLM packs and automatically run the semantic analysis skills (`role_analysis`, `tribe_analysis`, `risk_analysis`, `admin_mirror`, `semantic_metrics`, `recommendations`) and generate the final report via `report_generator`.
+3. **Запуск ИИ-Оркестратора:**
+Попроси ИИ-агента (например, Gemini/Claude/Cursor) выполнить скилл `community-garden`. Агент:
+   - Прочитает LLM-паки.
+   - Запустит семантический анализ (скиллы: `role_analysis`, `tribe_analysis`, `risk_analysis`, `admin_mirror`, `semantic_metrics`, `recommendations`).
+   - И в конце сгенерирует финальный отчет через скилл `report_generator`.

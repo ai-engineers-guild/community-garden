@@ -1,86 +1,51 @@
 # Community Garden Core
 
-# Community Garden Core
+*[🇷🇺 Русский язык (Russian)](README.ru.md)*
 
-**Community Garden** — это социологический ИИ-движок для глубокой аналитики сообществ. В отличие от стандартных ботов-статистиков, которые просто считают количество сообщений и активных юзеров, этот проект применяет социологические концепты (например, теорию "Садовника и Сорняков" Э. Юдковского), выявляя реальные поведенческие риски (выгорание экспертов, токсичность, перегруз) и формируя конкретный Action Plan для комьюнити-менеджера.
+**Community Garden** is a sociological AI engine for deep community analytics. Unlike standard stat-bots that merely count messages and active users, this project applies sociological concepts (e.g., Eliezer Yudkowsky's "Well-Kept Gardens Die by Pacifism" theory) to identify real behavioral risks (expert burnout, toxicity, information overload) and generate concrete Action Plans for community managers.
 
-## 🛠 Два режима работы:
+## 🛠 Two Modes of Operation:
 
-1. **Agent Skill (Offline/CLI)**: Локальный file-first пайплайн. Парсит сырые архивы (Telegram JSON) в унифицированные события. Автономные AI-агенты (например, в IDE или через CLI) читают подготовленные `llm_packs` и запускают свои аналитические "скиллы" (`role_analysis`, `tribe_analysis`, `risk_analysis`, `admin_mirror`) для генерации Markdown-отчетов. Никаких серверов, всё хранится локально в репозитории как "ухоженный сад данных" (`.garden/`).
-2. **SaaS / Telegram Bot (Runtime Wrapper - In Roadmap)**: Полноценный микросервис на FastAPI. Любой админ может добавить бота к себе в группу, "скормить" ему свой LLM API токен (BYOK), и бот начнет в реальном времени следить за здоровьем комьюнити, отправлять On-Demand репорты прямо в личку, консультировать админа по статистике в режиме чата и трекать историю того, как исправляются риски (Week-over-Week).
+1. **Agent Skill (Offline/CLI)**: A local file-first pipeline. It parses raw archives (Telegram JSON) into unified events. Autonomous AI agents (e.g., in an IDE or via CLI) read the prepared `llm_packs` and run their analytical "skills" (`role_analysis`, `tribe_analysis`, `risk_analysis`, `admin_mirror`) to generate Markdown reports. No servers required; everything is stored locally in the repository as a "well-kept garden of data" (`.garden/`).
+2. **SaaS / Telegram Bot (Runtime Wrapper - [See Roadmap](ROADMAP.md))**: A fully-fledged FastAPI microservice. Any admin can add the bot to their group, provide their LLM API token (BYOK - Bring Your Own Key), and the bot will monitor community health in real-time. It sends On-Demand reports via DMs, acts as a statistical consultant in chat, and tracks risk resolution over time (Week-over-Week).
 
 ---
 
-## Что под капотом?
+## What's under the hood?
 
-Движок превращает "сырые" события чатов в иерархию данных:
-- **Bronze data**: нормализованные json-события (парсинг сервисных сообщений, банов, инвайтов).
-- **Silver data**: детерминированные метрики графов и выводы LLM-скиллов (кто в каком трайбе, какие риски найдены).
-- **Gold data**: финальные WOW-отчеты в Markdown/HTML форматах и графики.
+The engine transforms "raw" chat events into a data hierarchy:
+- **Bronze data**: normalized json-events (parsing service messages, bans, invites).
+- **Silver data**: deterministic graph metrics and LLM-skill findings (who is in which tribe, what risks were found).
+- **Gold data**: final Week-over-Week reports in Markdown/HTML formats and charts.
 
-Архитектура позволяет легко добавлять адаптеры (Slack, Discord, Discourse) — ядро работает с универсальным `CommunityEvent`.
+The architecture easily accommodates new adapters (Slack, Discord, Discourse) — the core operates on a universal `CommunityEvent` model.
 
-## Install
+## 🚀 Quick Start
 
-```bash
-uv sync
-uv run cg --help
-```
+1. **Install**
+   ```bash
+   uv sync
+   uv run cg --help
+   ```
 
-Or as a package:
+2. **Initialize & Import**
+   ```bash
+   uv run cg init ./demo-garden --community-id demo --name "Demo Community"
+   uv run cg import telegram-export ./sample_data/telegram_result.json --project ./demo-garden
+   ```
 
-```bash
-uv pip install -e .
-```
+3. **Analyze & Generate LLM Packs**
+   ```bash
+   uv run cg analyze --project ./demo-garden --period 2026-W26
+   uv run cg llm-pack weekly --project ./demo-garden --period 2026-W26
+   ```
 
-## Fast path
+4. **Run AI Agents (Offline Skill)**
+   Use your favorite AI agent (Gemini, Claude, Cursor) with this repository and ask it to run the `community-garden` orchestration skill to generate the final WOW report.
 
-```bash
-uv run cg init ./demo-garden --community-id demo --name "Demo Community"
-uv run cg import telegram-export ./sample_data/telegram_result.json --project ./demo-garden
-uv run cg analyze --project ./demo-garden --period 2026-W26
-uv run cg report weekly --project ./demo-garden --period 2026-W26
-uv run cg llm-pack weekly --project ./demo-garden --period 2026-W26
-uv run cg chart radar --project ./demo-garden --period 2026-W26
-```
+## 🗺 Roadmap
 
-Outputs:
-
-```text
-.garden/
-  raw/
-  bronze/
-  silver/
-  gold/
-  memory/
-  skills/
-```
-
-## Data layers
-
-### Raw
-Original source files, untouched.
-
-### Bronze
-Normalized `CommunityEvent` JSONL files.
-
-### Silver
-Metrics, graphs, role candidates, tribe candidates, risk findings, admin mirror findings.
-
-### Gold
-Human-facing reports, recommendations, LLM packs, charts.
-
-## Current implementation status
-
-This repository is a complete MVP scaffold with working MVP-0 core and functional paths for MVP-1..MVP-4:
-
-- MVP-0: Telegram Desktop export → bronze events → metrics → graph → weekly report.
-- MVP-1: skill runner, semantic registry, role/risk/admin/tribe templates.
-- MVP-2: week-to-week trend comparison and radar chart data/artifact.
-- MVP-3: Telegram bot and Telethon local adapters are included as optional wrappers with graceful dependency checks.
-- MVP-4: CLI, MCP wrapper, FastAPI wrapper, scheduler primitives.
-
-The LLM layer is provider-agnostic by design. The core writes compact `llm_pack.md` files for Claude Code, OpenAI API, Anthropic API, local models, or manual review.
+Check out our [ROADMAP.md](ROADMAP.md) to see the upcoming features, including the Telegram Bot SaaS implementation, real-time tracking, and multi-tenant capabilities.
 
 ## Philosophy
 
