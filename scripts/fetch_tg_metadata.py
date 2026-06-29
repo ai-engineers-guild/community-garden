@@ -69,9 +69,14 @@ def fetch_chat_metadata(bot_token: str, chat_id: str, output_dir: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Fetch Telegram Chat Metadata (Admins, Member Count)")
-    parser.add_argument("--token", required=True, help="Telegram Bot Token")
-    parser.add_argument("--chat", required=True, help="Target Chat ID (e.g., -1001234567890 or @channelname)")
     parser.add_argument("--output", default=".garden/bronze/metadata", help="Output directory")
-    
     args = parser.parse_args()
-    fetch_chat_metadata(args.token, args.chat, args.output)
+    
+    bot_token = os.getenv("TG_BOT_TOKEN")
+    chat_id = os.getenv("TG_CHAT_ID")
+    
+    if not bot_token or not chat_id:
+        print("Error: TG_BOT_TOKEN and TG_CHAT_ID environment variables must be set.")
+        exit(1)
+        
+    fetch_chat_metadata(bot_token, chat_id, args.output)
