@@ -1,14 +1,24 @@
 # Community Garden Core
 
-File-first Python library for community intelligence.
+# Community Garden Core
 
-It turns raw community messages into:
+**Community Garden** — это социологический ИИ-движок для глубокой аналитики сообществ. В отличие от стандартных ботов-статистиков, которые просто считают количество сообщений и активных юзеров, этот проект применяет социологические концепты (например, теорию "Садовника и Сорняков" Э. Юдковского), выявляя реальные поведенческие риски (выгорание экспертов, токсичность, перегруз) и формируя конкретный Action Plan для комьюнити-менеджера.
 
-- **Bronze data**: normalized events.
-- **Silver data**: metrics, graphs, findings, role/tribe/risk artifacts.
-- **Gold data**: Markdown reports, recommendations, LLM packs, charts.
+## 🛠 Два режима работы:
 
-Telegram is only the first adapter. The core works with a universal `CommunityEvent` model and can later accept Slack, Discord, WhatsApp, Discourse, GitHub Discussions, Reddit, CSV/JSON exports, or custom sources.
+1. **Agent Skill (Offline/CLI)**: Локальный file-first пайплайн. Парсит сырые архивы (Telegram JSON) в унифицированные события. Автономные AI-агенты (например, в IDE или через CLI) читают подготовленные `llm_packs` и запускают свои аналитические "скиллы" (`role_analysis`, `tribe_analysis`, `risk_analysis`, `admin_mirror`) для генерации Markdown-отчетов. Никаких серверов, всё хранится локально в репозитории как "ухоженный сад данных" (`.garden/`).
+2. **SaaS / Telegram Bot (Runtime Wrapper - In Roadmap)**: Полноценный микросервис на FastAPI. Любой админ может добавить бота к себе в группу, "скормить" ему свой LLM API токен (BYOK), и бот начнет в реальном времени следить за здоровьем комьюнити, отправлять On-Demand репорты прямо в личку, консультировать админа по статистике в режиме чата и трекать историю того, как исправляются риски (Week-over-Week).
+
+---
+
+## Что под капотом?
+
+Движок превращает "сырые" события чатов в иерархию данных:
+- **Bronze data**: нормализованные json-события (парсинг сервисных сообщений, банов, инвайтов).
+- **Silver data**: детерминированные метрики графов и выводы LLM-скиллов (кто в каком трайбе, какие риски найдены).
+- **Gold data**: финальные WOW-отчеты в Markdown/HTML форматах и графики.
+
+Архитектура позволяет легко добавлять адаптеры (Slack, Discord, Discourse) — ядро работает с универсальным `CommunityEvent`.
 
 ## Install
 
