@@ -43,7 +43,11 @@ def get_weekly_report(period: str) -> dict:
     gp = get_project()
     period = normalize_period(period)
     path = gp.lake.gold_path("reports", "weekly", f"{period}.md")
-    return {"period": period, "exists": path.exists(), "content": path.read_text(encoding="utf-8") if path.exists() else None}
+    return {
+        "period": period,
+        "exists": path.exists(),
+        "content": path.read_text(encoding="utf-8") if path.exists() else None,
+    }
 
 
 @app.get("/metrics/{period}")

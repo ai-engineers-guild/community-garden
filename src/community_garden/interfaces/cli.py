@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 from pathlib import Path
-from typing import Optional
 
 import typer
 from rich.console import Console
@@ -12,7 +11,6 @@ from community_garden.core.pipeline import analyze_project
 from community_garden.periods import normalize_period
 from community_garden.project import GardenProject
 from community_garden.reports.weekly import render_weekly
-from community_garden.utils import write_text
 
 app = typer.Typer(help="Community Garden Core CLI")
 import_app = typer.Typer(help="Import source data")
@@ -49,7 +47,7 @@ def init(
 def import_telegram_export(
     input_path: Path = typer.Argument(..., help="Telegram Desktop result.json"),
     project: Path = typer.Option(Path("."), help="Project root"),
-    community_id: Optional[str] = typer.Option(None),
+    community_id: str | None = typer.Option(None),
 ):
     gp = GardenProject(project)
     cfg = gp.config
@@ -67,7 +65,9 @@ def import_telegram_export(
 @app.command()
 def analyze(
     project: Path = typer.Option(Path("."), help="Project root"),
-    period: str = typer.Option("last-week", help="YYYY-Www, YYYY-MM, YYYY-MM-DD, last-week, current-week"),
+    period: str = typer.Option(
+        "last-week", help="YYYY-Www, YYYY-MM, YYYY-MM-DD, last-week, current-week"
+    ),
 ):
     gp = GardenProject(project)
     result = run(analyze_project(gp, normalize_period(period)))
@@ -132,13 +132,16 @@ def skill_run(
         doc = gp.lake.read_silver_yaml(f"metrics/{period}.yml", default={}) or {}
     metrics = doc.get("metrics", {})
     runner = SkillRunner(gp.garden_dir)
-    
+
     if name == "all":
         result = runner.run_all(period, metrics)
     else:
         # We no longer have hardcoded python methods for these skills, they are LLM skills
-        result = {"status": "success", "message": f"Skill {name} is an LLM skill. Run via agent orchestration."}
-        
+        result = {
+            "status": "success",
+            "message": f"Skill {name} is an LLM skill. Run via agent orchestration.",
+        }
+
     console.print(f"[green]Ran skill[/green] {name}: {result}")
 
 
@@ -151,7 +154,9 @@ def telegram_collect(
 
     gp = GardenProject(project)
     out = gp.lake.raw_path("telegram_bot", "updates.jsonl")
-    console.print("[yellow]Starting Telegram long-polling collector. Bot sees only future updates.[/yellow]")
+    console.print(
+        "[yellow]Starting Telegram long-polling collector. Bot sees only future updates.[/yellow]"
+    )
     run(collect_long_polling(token=token, community_id=gp.config.community_id, out_jsonl=str(out)))
 
 
@@ -166,6 +171,7 @@ def serve(
     except ImportError as exc:
         raise RuntimeError("Install FastAPI extra: uv sync --extra fastapi") from exc
     import os
+
     os.environ["COMMUNITY_GARDEN_PROJECT"] = str(project.resolve())
     uvicorn.run("community_garden.interfaces.fastapi_app:app", host=host, port=port, reload=False)
 

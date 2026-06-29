@@ -29,17 +29,6 @@ jobs:
       - name: Run Markdownlint
         run: npx markdownlint-cli "**/*.md" --ignore ".venv" --ignore ".garden" --disable MD013 MD033 MD041 MD029 MD007
 
-  security-gitleaks:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   security-trufflehog:
     runs-on: ubuntu-latest
     steps:

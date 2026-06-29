@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import hashlib
-import json
-from datetime import datetime, timezone
+from collections.abc import Iterable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import orjson
 import yaml
@@ -16,7 +16,7 @@ def stable_id(*parts: object) -> str:
 
 
 def utc_now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def read_json(path: Path) -> Any:

@@ -1,18 +1,20 @@
-import os
-import json
-import requests
 import argparse
+import json
+import os
 from datetime import datetime
 from pathlib import Path
 
+import requests
+
+
 def fetch_chat_metadata(bot_token: str, chat_id: str, output_dir: str):
     base_url = f"https://api.telegram.org/bot{bot_token}"
-    
+
     metadata = {
         "fetched_at": datetime.utcnow().isoformat() + "Z",
         "chat_id": chat_id,
         "member_count": 0,
-        "admins": []
+        "admins": [],
     }
 
     print(f"Fetching member count for {chat_id}...")
@@ -28,9 +30,9 @@ def fetch_chat_metadata(bot_token: str, chat_id: str, output_dir: str):
         admins = admins_resp.json().get("result", [])
         for admin in admins:
             user = admin.get("user", {})
-            status = admin.get("status") # 'creator' or 'administrator'
+            status = admin.get("status")  # 'creator' or 'administrator'
             custom_title = admin.get("custom_title", "")
-            
+
             admin_info = {
                 "id": user.get("id"),
                 "is_bot": user.get("is_bot", False),
@@ -51,7 +53,7 @@ def fetch_chat_metadata(bot_token: str, chat_id: str, output_dir: str):
                     "can_edit_messages": admin.get("can_edit_messages", False),
                     "can_pin_messages": admin.get("can_pin_messages", False),
                     "can_manage_topics": admin.get("can_manage_topics", False),
-                }
+                },
             }
             metadata["admins"].append(admin_info)
     else:
@@ -60,23 +62,26 @@ def fetch_chat_metadata(bot_token: str, chat_id: str, output_dir: str):
     # Ensure output directory exists
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
-    
+
     file_path = out_path / "metadata.json"
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(metadata, f, ensure_ascii=False, indent=2)
-        
+
     print(f"Metadata saved successfully to {file_path}")
 
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Fetch Telegram Chat Metadata (Admins, Member Count)")
+    parser = argparse.ArgumentParser(
+        description="Fetch Telegram Chat Metadata (Admins, Member Count)"
+    )
     parser.add_argument("--output", default=".garden/bronze/metadata", help="Output directory")
     args = parser.parse_args()
-    
+
     bot_token = os.getenv("TG_BOT_TOKEN")
     chat_id = os.getenv("TG_CHAT_ID")
-    
+
     if not bot_token or not chat_id:
         print("Error: TG_BOT_TOKEN and TG_CHAT_ID environment variables must be set.")
         exit(1)
-        
+
     fetch_chat_metadata(bot_token, chat_id, args.output)

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections import defaultdict
 from typing import Any
 
 import networkx as nx
@@ -30,7 +29,14 @@ def build_interaction_graph(events: list[CommunityEvent]) -> nx.DiGraph:
 
 def graph_metrics(graph: nx.DiGraph) -> dict[str, Any]:
     if graph.number_of_nodes() == 0:
-        return {"nodes": 0, "edges": 0, "density": 0, "leaders": [], "bridges": [], "communities": []}
+        return {
+            "nodes": 0,
+            "edges": 0,
+            "density": 0,
+            "leaders": [],
+            "bridges": [],
+            "communities": [],
+        }
     undirected = graph.to_undirected()
     weighted_degree = sorted(graph.degree(weight="weight"), key=lambda x: x[1], reverse=True)
     try:
@@ -42,7 +48,10 @@ def graph_metrics(graph: nx.DiGraph) -> dict[str, Any]:
     if undirected.number_of_edges() > 0 and undirected.number_of_nodes() > 1:
         try:
             from networkx.algorithms.community import louvain_communities
-            communities = [sorted(list(c)) for c in louvain_communities(undirected, weight="weight", seed=42)]
+
+            communities = [
+                sorted(list(c)) for c in louvain_communities(undirected, weight="weight", seed=42)
+            ]
         except Exception:
             communities = [sorted(list(c)) for c in nx.connected_components(undirected)]
     return {

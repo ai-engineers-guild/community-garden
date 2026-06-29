@@ -6,7 +6,6 @@ from community_garden.metrics.basic import calculate_basic_metrics, garden_healt
 from community_garden.periods import normalize_period
 from community_garden.project import GardenProject
 from community_garden.skills.runner import SkillRunner
-from community_garden.utils import write_yaml
 
 
 async def analyze_project(project: GardenProject, period: str | None = None) -> dict:
@@ -17,10 +16,18 @@ async def analyze_project(project: GardenProject, period: str | None = None) -> 
     health = garden_health_from_metrics(metrics)
     graph = build_interaction_graph(events)
     gmetrics = graph_metrics(graph)
-    project.lake.write_silver_yaml(f"metrics/{period}.yml", {"period": period, "metrics": metrics, "garden_health": health})
+    project.lake.write_silver_yaml(
+        f"metrics/{period}.yml", {"period": period, "metrics": metrics, "garden_health": health}
+    )
     project.lake.write_silver_yaml(f"graphs/{period}.yml", {"period": period, "graph": gmetrics})
     export_graphml(graph, project.lake.silver_path("graphs", f"reply_graph_{period}.graphml"))
     SkillRunner(project.garden_dir).run_all(period, metrics)
     llm_pack = build_weekly_llm_pack(events, metrics, gmetrics, period)
     project.lake.write_gold_text(f"llm_packs/weekly_{period}.md", llm_pack)
-    return {"period": period, "events": len(events), "metrics": metrics, "garden_health": health, "graph": gmetrics}
+    return {
+        "period": period,
+        "events": len(events),
+        "metrics": metrics,
+        "garden_health": health,
+        "graph": gmetrics,
+    }

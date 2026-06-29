@@ -8,7 +8,7 @@ from community_garden.lake import GardenLake
 from community_garden.periods import normalize_period
 from community_garden.utils import read_yaml
 
-TEMPLATE = Template(r'''
+TEMPLATE = Template(r"""
 # Weekly Garden Report — {{ period }}
 
 ## 1. Data limitations
@@ -156,14 +156,16 @@ cg llm-pack weekly --period {{ period }}
 ```
 
 Then run an external LLM over the pack with the project skills in `.garden/skills`.
-''')
+""")
 
 
 def render_weekly(lake: GardenLake, period: str | None = None) -> Path:
     period = normalize_period(period)
     metrics_doc = lake.read_silver_yaml(f"metrics/{period}.yml", default={}) or {}
     graph_doc = lake.read_silver_yaml(f"graphs/{period}.yml", default={}) or {}
-    risks_doc = read_yaml(lake.root / "silver" / "risks" / f"risks_{period}.yml", default={"risks": []}) or {"risks": []}
+    risks_doc = read_yaml(
+        lake.root / "silver" / "risks" / f"risks_{period}.yml", default={"risks": []}
+    ) or {"risks": []}
     text = TEMPLATE.render(
         period=period,
         metrics=metrics_doc.get("metrics", {}),

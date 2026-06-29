@@ -1,12 +1,20 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from community_garden.models import CommunityEvent
 from community_garden.periods import event_day, event_in_period
-from community_garden.utils import append_jsonl, iter_jsonl, read_yaml, write_json, write_text, write_yaml
+from community_garden.utils import (
+    append_jsonl,
+    iter_jsonl,
+    read_yaml,
+    write_json,
+    write_text,
+    write_yaml,
+)
 
 
 class GardenLake:

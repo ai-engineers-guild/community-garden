@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import Any, AsyncIterator
+from collections.abc import AsyncIterator
+from datetime import UTC, datetime
+from typing import Any
 
 from community_garden.adapters.base import SourceAdapter
 from community_garden.models import Actor, CommunityEvent, Content, EventType, Relation, Space
@@ -38,26 +39,39 @@ class TelegramBotAdapter(SourceAdapter):
         msg_id = msg.get("message_id")
         if msg_id is None:
             return None
-        ts = datetime.fromtimestamp(msg.get("date", 0), tz=timezone.utc)
+        ts = datetime.fromtimestamp(msg.get("date", 0), tz=UTC)
         text = msg.get("text") or msg.get("caption") or ""
         return CommunityEvent(
             event_id=f"telegram:{chat_id}:{msg_id}",
             source="telegram_bot",
             community_id=community_id,
-            event_type=EventType.MESSAGE_EDITED if update.get("edited_message") else EventType.MESSAGE_CREATED,
+            event_type=EventType.MESSAGE_EDITED
+            if update.get("edited_message")
+            else EventType.MESSAGE_CREATED,
             timestamp=ts,
             actor=Actor(
                 id=f"telegram:{user.get('id', 'unknown')}",
-                display_name=" ".join([str(user.get("first_name") or ""), str(user.get("last_name") or "")]).strip() or user.get("username"),
+                display_name=" ".join(
+                    [str(user.get("first_name") or ""), str(user.get("last_name") or "")]
+                ).strip()
+                or user.get("username"),
                 username=user.get("username"),
                 is_bot=bool(user.get("is_bot")),
             ),
             space=Space(platform="telegram", chat_id=chat_id, chat_title=chat.get("title")),
             relation=Relation(
-                reply_to_event_id=f"telegram:{chat_id}:{msg.get('reply_to_message', {}).get('message_id')}" if msg.get("reply_to_message") else None,
-                reply_to_message_id=msg.get("reply_to_message", {}).get("message_id") if msg.get("reply_to_message") else None,
+                reply_to_event_id=f"telegram:{chat_id}:{msg.get('reply_to_message', {}).get('message_id')}"
+                if msg.get("reply_to_message")
+                else None,
+                reply_to_message_id=msg.get("reply_to_message", {}).get("message_id")
+                if msg.get("reply_to_message")
+                else None,
             ),
-            content=Content(text=text, clean_text=" ".join(text.split()), has_link="http://" in text or "https://" in text),
+            content=Content(
+                text=text,
+                clean_text=" ".join(text.split()),
+                has_link="http://" in text or "https://" in text,
+            ),
         )
 
 
@@ -71,8 +85,9 @@ async def collect_long_polling(token: str, community_id: str, out_jsonl: str) ->
     except ImportError as exc:
         raise RuntimeError("Install bot extra: uv sync --extra bot") from exc
 
-    from community_garden.utils import append_jsonl
     from pathlib import Path
+
+    from community_garden.utils import append_jsonl
 
     bot = Bot(token=token)
     dp = Dispatcher()
@@ -84,4 +99,13 @@ async def collect_long_polling(token: str, community_id: str, out_jsonl: str) ->
         if event:
             append_jsonl(Path(out_jsonl), [event])
 
-    await dp.start_polling(bot, allowed_updates=["message", "edited_message", "chat_member", "message_reaction", "message_reaction_count"])
+    await dp.start_polling(
+        bot,
+        allowed_updates=[
+            "message",
+            "edited_message",
+            "chat_member",
+            "message_reaction",
+            "message_reaction_count",
+        ],
+    )

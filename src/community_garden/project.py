@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 from community_garden.lake import GardenLake
 from community_garden.models import CommunityConfig, CommunityEvent
 from community_garden.periods import normalize_period
-from community_garden.utils import read_yaml, write_text, write_yaml, utc_now_iso
+from community_garden.utils import read_yaml, utc_now_iso, write_text, write_yaml
 
 
 class GardenProject:
@@ -22,7 +22,7 @@ class GardenProject:
         community_id: str = "community",
         name: str = "Community",
         timezone: str = "UTC",
-    ) -> "GardenProject":
+    ) -> GardenProject:
         project = cls(root)
         project.root.mkdir(parents=True, exist_ok=True)
         project.garden_dir.mkdir(parents=True, exist_ok=True)

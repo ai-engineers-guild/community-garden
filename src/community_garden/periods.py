@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
-from typing import Iterable
+from datetime import UTC, datetime, timedelta
 
 
 def iso_week_period(dt: datetime) -> str:
@@ -18,7 +17,7 @@ def event_day(dt: datetime) -> str:
 
 
 def normalize_period(period: str | None, now: datetime | None = None) -> str:
-    now = now or datetime.now(timezone.utc)
+    now = now or datetime.now(UTC)
     if not period or period in {"current-week", "this-week"}:
         return iso_week_period(now)
     if period == "last-week":
