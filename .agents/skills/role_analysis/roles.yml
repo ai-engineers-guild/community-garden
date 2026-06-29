@@ -19,3 +19,13 @@ roles:
     description: "Выступает против жесткой модерации под предлогом свободы слова и толерантности. Защищает сорняки от садовников, чем в итоге убивает сад."
     positive_signals: []
     negative_signals: [complains about bans, asks to 'just ignore' trolls, defends toxic behavior, criticizes strict moderation]
+  seeker:
+    title: "Искатель (Seeker / Newbie)"
+    description: "Задает много вопросов, ищет менторство, направления для развития."
+    positive_signals: [asks for roadmap, asks for advice, polite]
+    negative_signals: [asks easily googleable questions without trying]
+  builder:
+    title: "Строитель (Builder / Maker)"
+    description: "Разрабатывает свои проекты, делится MVP, просит фидбэк, активно участвует в технических дискуссиях о реализации."
+    positive_signals: [shares projects, github links, technical details, building in public]
+    negative_signals: [spamming links without context]
