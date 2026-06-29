@@ -1,12 +1,7 @@
 .venv/
 __pycache__/
 *.pyc
-.garden/raw/
-.garden/bronze/
-.garden/silver/
-.garden/gold/
-.garden/interventions/
-.garden/memory/
+.garden/
 .serena/
 .pytest_cache/
 *.session
