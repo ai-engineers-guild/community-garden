@@ -45,19 +45,7 @@ class GardenProject:
         }.items():
             write_text(project.garden_dir / rel, content)
         project.lake.ensure_dirs()
-        project.copy_builtin_skills()
         return project
-
-    def copy_builtin_skills(self) -> None:
-        # Lightweight templates copied into project for user-editability.
-        skills_dir = self.garden_dir / "skills"
-        skills_dir.mkdir(parents=True, exist_ok=True)
-        from community_garden.skills.templates import BUILTIN_SKILLS
-
-        for rel, content in BUILTIN_SKILLS.items():
-            path = skills_dir / rel
-            if not path.exists():
-                write_text(path, content)
 
     @property
     def config(self) -> CommunityConfig:
